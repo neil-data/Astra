@@ -1,0 +1,25 @@
+# astra-backend/requirements.txt
+
+# Core
+fastapi==0.136.1
+uvicorn[standard]==0.34.0
+
+# Database
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.28.0
+alembic==1.14.1
+
+# Cache
+redis==5.2.1
+
+# Config & validation
+pydantic==2.10.4
+pydantic-settings==2.7.0
+python-dotenv==1.1.0
+
+# Auth
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# HTTP client (for fetching space weather APIs)
+httpx==0.28.1

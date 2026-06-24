@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: astra_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: astra_user
+      POSTGRES_PASSWORD: astra_pass
+      POSTGRES_DB: astra_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U astra_user -d astra_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: astra_redis
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: ./astra-backend
+    container_name: astra_app
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://astra_user:astra_pass@postgres:5432/astra_db
+      REDIS_URL: redis://redis:6379
+      ENV: development
+      JWT_SECRET_KEY: astra-super-secret-key-change-in-production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./astra-backend:/app
+
+volumes:
+  postgres_data:
+  redis_data:
