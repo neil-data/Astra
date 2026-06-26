@@ -1,5 +1,7 @@
 # astra-backend/routers/risk.py
 
+from datetime import datetime, timezone
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -9,6 +11,8 @@ from models import SpaceWeatherForecast, SpaceWeatherAlert
 from schemas import RiskResponse, AlertListResponse
 
 router = APIRouter(prefix="/risk", tags=["Risk"])
+
+ALLOWED_SOURCES = ["NOAA", "GOES", "DONKI", "DSCOVR"]
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -127,3 +131,56 @@ async def get_active_alerts(db: AsyncSession = Depends(get_db)):
     alerts = result.scalars().all()
 
     return AlertListResponse(total=len(alerts), alerts=alerts)
+
+
+# ── POST /risk/alerts ─────────────────────────────────────────────────────────
+
+@router.post("/alerts")
+async def trigger_alert_engine(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        select(SpaceWeatherForecast)
+        .order_by(SpaceWeatherForecast.forecast_time.desc())
+        .limit(1)
+    )
+    latest_forecast = result.scalars().first()
+
+    if not latest_forecast:
+        raise HTTPException(status_code=404, detail="No forecast available.")
+
+    result = await db.execute(
+        select(SpaceWeatherAlert)
+        .where(SpaceWeatherAlert.is_active == True)
+        .limit(1)
+    )
+    active_alert = result.scalars().first()
+
+    risk = latest_forecast.risk_level.upper() if latest_forecast.risk_level else "LOW"
+
+    if risk in ("HIGH", "EXTREME"):
+        if active_alert:
+            return {"status": "unchanged", "message": "Alert already active."}
+
+        new_alert = SpaceWeatherAlert(
+            forecast_id  = latest_forecast.id,
+            alert_level  = risk,
+            alert_type   = "RADIATION_RISK",
+            message      = f"{risk} space weather risk detected.",
+            is_active    = True,
+            triggered_at = datetime.now(timezone.utc)
+        )
+        db.add(new_alert)
+        await db.commit()
+
+        return {
+            "status":        "created",
+            "alert_level":   risk,
+            "forecast_time": latest_forecast.forecast_time
+        }
+
+    if active_alert:
+        active_alert.is_active   = False
+        active_alert.resolved_at = datetime.now(timezone.utc)
+        await db.commit()
+        return {"status": "resolved", "message": "Alert resolved successfully."}
+
+    return {"status": "no_action", "message": "No active alerts."}
