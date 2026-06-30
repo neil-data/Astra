@@ -74,8 +74,10 @@ services:
       dockerfile: Dockerfile
     container_name: astra_data_pipeline
     restart: on-failure
-    env_file:
-      - .env
+    environment:
+      DATABASE_URL: postgresql://astra_user:astra_pass@postgres:5432/astra_db
+      REDIS_URL: redis://redis:6379
+      NASA_API_KEY: ${NASA_API_KEY}
     depends_on:
       postgres:
         condition: service_healthy
