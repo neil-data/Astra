@@ -1,0 +1,72 @@
+services:
+  - type: web
+    name: astra-backend
+    runtime: docker
+    dockerfilePath: ./astra-backend/Dockerfile
+    dockerContext: ./astra-backend
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: astra-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: astra-redis
+          type: redis
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: ENV
+        value: production
+    healthCheckPath: /api/v1/health
+
+  - type: worker
+    name: astra-data-pipeline
+    runtime: docker
+    dockerfilePath: ./data_pipeline/Dockerfile
+    dockerContext: ./data_pipeline
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: astra-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: astra-redis
+          type: redis
+          property: connectionString
+
+  - type: worker
+    name: astra-ml-pipeline
+    runtime: docker
+    dockerfilePath: ./astra_ml_pipeline/Dockerfile
+    dockerContext: ./astra_ml_pipeline
+    plan: free
+    envVars:
+      - key: DATABASE_URL_SYNC
+        fromDatabase:
+          name: astra-db
+          property: connectionString
+
+  - type: web
+    name: astra-frontend
+    runtime: docker
+    dockerfilePath: ./astra_frontend/Dockerfile
+    dockerContext: ./astra_frontend
+    plan: free
+    envVars:
+      - key: VITE_API_BASE
+        sync: false
+
+  - type: redis
+    name: astra-redis
+    plan: free
+    ipAllowList: []
+
+databases:
+  - name: astra-db
+    plan: free
+    databaseName: astra_db
+    user: astra_user

@@ -1,0 +1,6 @@
+{
+  "name": "ASTRA Space Radiation Forecasting System",
+  "description": "AI-based space radiation forecasting system for geostationary satellites, built for the ISRO Bharatiya Antariksh Hackathon 2026.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

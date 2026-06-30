@@ -1,0 +1,45 @@
+name: ASTRA Monorepo CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-lint-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r astra-backend/requirements.txt
+      - name: Lint with flake8 (syntax checks)
+        run: |
+          pip install flake8
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 astra-backend/app --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  frontend-lint-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: astra_frontend/package-lock.json
+      - name: Install dependencies
+        run: |
+          cd astra_frontend
+          npm ci
+      - name: Run TypeScript check
+        run: |
+          cd astra_frontend
+          npm run lint

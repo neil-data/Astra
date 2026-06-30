@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+env/
+*.pyc
+
+# Node
+node_modules/
+dist/
+.vite/
+*.local
+
+# Environment files (never commit real secrets)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ML artifacts (large binaries, regenerate via training, don't commit)
+astra_ml_pipeline/artifacts/*.pt
+astra_ml_pipeline/artifacts/*.pkl
+astra_ml_pipeline/data/*.parquet
+astra_ml_pipeline/data/*.npz
+astra_ml_pipeline/data/*.csv
+!astra_ml_pipeline/artifacts/.gitkeep
+!astra_ml_pipeline/data/.gitkeep
+
+# Docker
+*.pid
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build outputs
+build/
+*.egg-info
