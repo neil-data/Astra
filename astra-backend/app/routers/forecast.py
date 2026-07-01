@@ -1,7 +1,7 @@
 # astra-backend/routers/forecast.py
 
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -107,7 +107,7 @@ async def get_forecast_by_id(
 
 # ── POST /forecast ────────────────────────────────────────────────────────────
 
-@router.post("", status_code=201)
+@router.post("", status_code=201, response_model=Dict[str, Any])
 async def create_forecast(
     horizon: int = Query(default=60, description="Prediction horizon: 60 / 180 / 1440"),
     db: AsyncSession = Depends(get_db)
