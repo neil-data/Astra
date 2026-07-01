@@ -357,7 +357,7 @@ flowchart TD
 | `GET` | `/forecast` | Returns 1h / 3h / 24h particle flux forecasts | ✅ |
 | `GET` | `/risk` | Returns current risk classification (Low–Extreme) | ✅ |
 | `GET` | `/history` | Returns historical telemetry & past risk levels | ✅ |
-| `GET` | `/status` | System health, data-feed connectivity, model status | ❌ |
+| `GET` | `/status` | System health, data-feed connectivity, model status | ✅ |
 | `POST` | `/predict` | Runs on-demand inference on supplied telemetry | ✅ |
 | `WS` | `/ws/live` | Real-time streaming of forecasts & alerts | ✅ |
 
