@@ -82,7 +82,11 @@ class SpaceWeatherForecast(Base):
     __tablename__ = "space_weather_forecasts"
 
     id         = Column(BigInteger, primary_key=True, autoincrement=True)
-    feature_id = Column(BigInteger, ForeignKey("processed_space_weather_features.id"), nullable=False)
+
+    # NOTE: made nullable. forecast.py has a fallback path that creates a
+    # forecast directly from raw observations (no processed feature row
+    # exists yet in that case), so this FK must be optional.
+    feature_id = Column(BigInteger, ForeignKey("processed_space_weather_features.id"), nullable=True)
 
     forecast_time                   = Column(DateTime, nullable=False, index=True)
     prediction_horizon_minutes      = Column(Integer, nullable=False)  # 60 / 180 / 1440
