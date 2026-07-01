@@ -8,6 +8,10 @@ from fastapi.responses import RedirectResponse
 from config import settings
 from database import check_db_connection, engine
 
+# Step 1: Added imports for DB initialization
+import models
+from database import Base
+
 # Routers
 from routers.status import router as status_router
 from routers.forecast import router as forecast_router
@@ -39,6 +43,12 @@ async def lifespan(app: FastAPI):
     logger.info("ASTRA starting up...")
 
     await check_db_connection()
+
+    # Step 2: Create database tables if they don't exist
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    logger.info("Database tables ready")
 
     logger.info("ASTRA started successfully 🚀")
 
