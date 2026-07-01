@@ -1,803 +1,598 @@
+<a name="readme-top"></a>
 <div align="center">
 
-<!-- PROJECT LOGO PLACEHOLDER -->
-<img src="./docs/assets/astra-logo-placeholder.png" alt="ASTRA Logo" width="140" />
-
-# 🛰️ ASTRA
-### Advanced Space Terrain & Radiation Analytics
-
-**AI-Powered Space Radiation Forecasting & Solar Storm Intelligence Platform**
-
-<!-- ANIMATED BANNER PLACEHOLDER -->
-<img src="./docs/assets/astra-banner-placeholder.gif" alt="ASTRA Banner" width="100%" />
+<img src=".github/assets/banner.svg" alt="ASTRA — Advanced Space Terrain and Radiation Analytics" width="100%" />
 
 <br/>
 
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](./LICENSE)
+[![FastAPI](https://img.shields.io/badge/FastAPI-REST%20%2B%20WS-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=0A0E1A)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-LSTM-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![TimescaleDB](https://img.shields.io/badge/TimescaleDB-PG16-FDB515?style=for-the-badge&logo=postgresql&logoColor=0A0E1A)](https://www.timescale.com/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
-[![Stars](https://img.shields.io/github/stars/neil-data/Astra?style=for-the-badge&color=gold)](https://github.com/neil-data/Astra/stargazers)
-[![Forks](https://img.shields.io/github/forks/neil-data/Astra?style=for-the-badge&color=blue)](https://github.com/neil-data/Astra/network/members)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/neil-data/Astra/ci.yml?style=for-the-badge&label=Build)](https://github.com/neil-data/Astra/actions)
+<p>
+  <a href="https://astra-five-green.vercel.app"><strong>🚀 Live Demo</strong></a> ·
+  <a href="https://github.com/neil-data/Astra.git"><strong>📦 Source</strong></a> ·
+  <a href="#-api-reference"><strong>📚 API Docs</strong></a>
+</p>
+
+<p><em>Built for the <strong>Bharatiya Antariksh Hackathon 2026</strong> (ISRO × Hack2Skill) — Team <strong>VoidArchitects</strong></em></p>
+
+</div>
 
 <br/>
 
-**Built for the 🇮🇳 Bharatiya Antariksh Hackathon (BAH) 2026 — ISRO × Hack2Skill**
-**Problem Statement:** *Forecasting Energetic Particle Radiation Environment for ISRO's Geostationary Satellites*
+> ### ⚡ TL;DR
+> Geostationary satellites sit in one of the harshest radiation environments in Earth orbit. **ASTRA** watches the Sun in real time, feeds live solar-wind and X-ray telemetry into an LSTM + XGBoost forecasting core, and turns raw particle-flux readings into a **1h / 3h / 24h risk forecast** — with a four-level operator alert (`LOW` → `MEDIUM` → `HIGH` → `EXTREME`) delivered before the storm actually arrives.
 
-[🚀 Live Demo](https://astra-five-green.vercel.app) · [📦 Repository](https://github.com/neil-data/Astra) · [📖 Documentation](#-table-of-contents) · [🐛 Report a Bug](https://github.com/neil-data/Astra/issues)
+<br/>
 
+## 📋 Table of Contents
+
+- [🌌 Overview](#overview)
+- [🖥️ Preview](#preview)
+- [✨ Features](#features)
+- [🏗️ Architecture](#architecture)
+- [🔁 End-to-End Data Flow](#data-flow)
+- [🚨 Alert Lifecycle](#alert-lifecycle)
+- [🧠 Machine Learning](#machine-learning)
+- [🛠️ Tech Stack](#tech-stack)
+- [📁 Project Structure](#project-structure)
+- [📡 Data Sources](#data-sources)
+- [📚 API Reference](#api-reference)
+- [⚡ Getting Started](#getting-started)
+- [🔐 Environment Variables](#environment-variables)
+- [☁️ Deployment](#deployment)
+- [🤝 Contributing](#contributing)
+- [👥 Team](#team)
+
+<br/>
+
+<a name="overview"></a>
+
+## 🌌 Overview
+
+**ASTRA — Advanced Space Terrain & Radiation Analytics** is an AI-powered space-weather forecasting platform built for the problem statement *"Forecasting Energetic Particle Radiation Environment for ISRO's Geostationary Satellites."*
+
+Solar flares and coronal mass ejections (CMEs) can upset onboard electronics, degrade solar arrays, and force satellite operators into a defensive safe-mode with little warning. Unlike existing tools that only surface raw space-weather numbers, ASTRA continuously ingests live telemetry, runs it through trained ML models, and converts it directly into an **actionable, operator-ready risk level** — closing the gap between *"a storm is coming"* and *"the satellite already knows."*
+
+|  |  |
+|---|---|
+| **Services** | 4 — backend API · data pipeline · ML pipeline · frontend dashboard |
+| **Data sources** | NOAA SWPC · NASA DONKI · GOES-16 · ACE/DSCOVR |
+| **Forecast horizons** | 1h · 3h · 24h |
+| **Models** | LSTM (proton flux) · XGBoost (risk classification) · regression (CME arrival) |
+| **Alert levels** | 🟢 LOW · 🟡 MEDIUM · 🟠 HIGH · 🔴 EXTREME |
+| **Live channel** | REST API + WebSocket (`/ws/live`) |
+
+> **Note:** ASTRA is a research/forecasting platform built for a hackathon, not a certified operational space-weather warning system. For mission-critical decisions, always cross-reference official NOAA SWPC and ISRO advisories.
+
+<br/>
+
+<a name="preview"></a>
+
+## 🖥️ Preview
+
+<div align="center">
+<img src=".github/assets/dashboard-preview.png" alt="ASTRA dashboard, forecast, alerts, and history views" width="100%" />
+<sub>Console dashboard · predictive forecast panel · operator alert console · historical telemetry matrix</sub>
 </div>
 
----
+<br/>
 
-## 📑 Table of Contents
-
-<details>
-<summary>Click to expand</summary>
-
-- [Vision](#-vision)
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Folder Structure](#-folder-structure)
-- [Technology Stack](#-technology-stack)
-- [AI Models](#-ai-models)
-- [Data Sources](#-data-sources)
-- [ML Pipeline](#-ml-pipeline)
-- [API Documentation](#-api-documentation)
-- [Dashboard Showcase](#-dashboard-showcase)
-- [Installation](#-installation)
-- [Running the Project](#-running-the-project)
-- [Machine Learning Training](#-machine-learning-training)
-- [Database Schema](#-database-schema)
-- [Risk Levels](#-risk-levels)
-- [Performance Metrics](#-performance-metrics)
-- [Future Roadmap](#-future-roadmap)
-- [Security](#-security)
-- [Testing](#-testing)
-- [Contributing](#-contributing)
-- [Team](#-team)
-- [License](#-license)
-- [Acknowledgements](#-acknowledgements)
-
-</details>
-
----
-
-## 🌌 Vision
-
-> *"A geostationary satellite doesn't get a second chance mid-storm."*
-
-Earth's near-space environment is not calm and empty — it is a constantly shifting sea of energetic particles, solar wind, and radiation driven by the Sun. When the Sun erupts — through solar flares, coronal mass ejections (CMEs), or high-speed solar wind streams — the resulting particle radiation can silently degrade or catastrophically disable the satellites that our daily lives depend on.
-
-**ASTRA** exists because *reactive* space-weather monitoring is no longer good enough. Dashboards that only display raw NOAA/NASA feeds tell an operator what is happening *right now* — but by the time a proton storm shows up on a live feed, the exposure window has often already begun. ASTRA closes that gap with **predictive, AI-driven intelligence**, giving operators a forecast window before the storm arrives, not just a readout after it does.
-
-### Why this matters
-
-| Stakeholder | Impact of Space Radiation Events |
-|---|---|
-| 🛰️ **ISRO & Satellite Operators** | Single-event upsets, solder-joint failures, and permanent sensor degradation on GEO assets like INSAT/GSAT spacecraft |
-| 👨‍🚀 **Astronaut Safety** | Elevated radiation dosage risk during EVAs and crewed missions during solar particle events (SPEs) |
-| 📡 **GPS & Navigation** | Ionospheric scintillation causes positioning errors, signal loss, and degraded accuracy for civilian and defense systems |
-| 📞 **Communication Networks** | HF radio blackouts and satellite communication link degradation during geomagnetic storms |
-| ⛅ **Terrestrial Weather Systems** | Disruption of weather-satellite telemetry used for forecasting and disaster response |
-| ⚡ **Power Grids** | Geomagnetically Induced Currents (GICs) can trip transformers and cause regional blackouts |
-| 🏢 **Commercial Satellite Operators** | Financial loss from anomalies, safe-mode entries, and reduced mission lifetime of orbital assets |
-
-ASTRA's mission is simple: **turn raw heliophysics data into an early-warning system that a satellite operator can act on — minutes, hours, and a full day before impact.**
-
----
+<a name="features"></a>
 
 ## ✨ Features
 
-| Feature | Description | Status |
-|---|---|---|
-| 🌐 **Real-Time Monitoring** | Continuous polling of solar wind, proton flux, and geomagnetic indices from live feeds | ✅ |
-| ☀️ **Solar Flare Prediction** | Early detection signals derived from X-ray flux and solar activity trends | ✅ |
-| 🧠 **LSTM Forecasting** | Deep-learning particle flux forecasts at 1h / 3h / 24h horizons | ✅ |
-| 🌊 **CME Arrival Prediction** | Regression-based estimated arrival time of coronal mass ejections | ✅ |
-| 🚦 **Risk Classification** | XGBoost-based Low / Medium / High / Extreme risk categorization | ✅ |
-| 📊 **Interactive Dashboard** | Live, responsive operator console with charts, KPIs, and alerts | ✅ |
-| 🔌 **REST API** | Fully documented endpoints for forecast, risk, history, and status | ✅ |
-| 🔄 **WebSockets** | Real-time push updates to the dashboard without polling | ✅ |
-| 🐳 **Docker Deployment** | One-command containerized deployment via Docker Compose | ✅ |
-| 🔐 **Authentication** | JWT-secured API and role-based access control (RBAC) | ✅ |
-| 📈 **Historical Analytics** | Time-series exploration of past radiation and geomagnetic events | ✅ |
-| 🚨 **Alert Engine** | Threshold- and ML-driven multi-channel alerting (dashboard/email/SMS) | ✅ |
-| ⏱️ **TimescaleDB** | Optimized hypertables for high-frequency space-weather time series | ✅ |
-| ⚡ **Redis Caching** | Sub-millisecond caching layer for hot forecast/risk queries | ✅ |
-| 📱 **Responsive UI** | Mobile-first design built with TailwindCSS + Recharts | ✅ |
+| | |
+|---|---|
+| 🛰️ **Real-time monitoring** | Continuously polls NOAA SWPC, NASA DONKI, GOES-16 and ACE/DSCOVR for solar and space-weather parameters |
+| 🔗 **Multi-source data fusion** | Normalizes and quality-checks readings from four independent feeds into one consistent time series |
+| 🧠 **AI-powered forecasting** | Predicts radiation intensity at 1h, 3h and 24h horizons using an LSTM deep-learning core |
+| 📈 **Proton flux prediction** | LSTM sequence model trained on rolling windows of solar-wind and X-ray features |
+| 🧮 **Risk classification** | XGBoost model maps predicted flux into actionable `LOW / MEDIUM / HIGH / EXTREME` categories |
+| ☄️ **CME arrival prediction** | Regression head estimates hours-to-arrival for an in-transit coronal mass ejection |
+| 🚨 **Four-level alert engine** | Automatically raises operator alerts as thresholds are crossed |
+| 💻 **Live dashboard** | React 19 + TypeScript SPA with live KPIs, timelines, and a 3D satellite hero |
+| 🕓 **Historical analytics** | Trend visualization over stored telemetry for situational awareness |
+| 🔌 **REST + WebSocket API** | FastAPI backend with auto-generated Swagger docs and a `/ws/live` push stream |
+| 🔐 **Secure & scalable** | JWT auth, role-based access, and a fully containerized Docker Compose stack |
 
----
+<br/>
+
+<a name="architecture"></a>
 
 ## 🏗️ Architecture
 
-ASTRA follows a **six-layer architecture** — from raw heliophysics data ingestion to operator-facing action — with a cross-cutting foundation for security, scalability, and observability.
+ASTRA is a four-service pipeline: telemetry is **ingested → stored → forecast → served**, end to end, from raw solar-wind readings to a risk badge on an operator's screen.
+
+```mermaid
+flowchart TB
+    NOAA["NOAA SWPC<br/>Solar wind · Bz/Bt · Kp"]:::source
+    GOES["GOES-16<br/>Proton / electron flux"]:::source
+    DONKI["NASA DONKI<br/>CME &amp; flare events"]:::source
+    ACE["ACE / DSCOVR<br/>Solar wind · IMF · particles"]:::source
+
+    SCHED["Scheduler<br/>(APScheduler)"]:::pipeline
+    QUAL["Data Quality Checks"]:::pipeline
+    FEAT["Feature Engineering"]:::pipeline
+
+    DB[("TimescaleDB")]:::storage
+    CACHE[("Redis Cache")]:::storage
+
+    LSTM["LSTM<br/>Proton Flux Forecast"]:::ml
+    XGB["XGBoost<br/>Risk Classification"]:::ml
+    REG["Regression<br/>CME Arrival"]:::ml
+    ALERT["Alert Engine<br/>LOW → EXTREME"]:::ml
+
+    API["FastAPI REST"]:::backend
+    WS["WebSocket /ws/live"]:::backend
+
+    UI["React Dashboard<br/>Vite · TanStack Query · Three.js"]:::frontend
+
+    NOAA --> SCHED
+    GOES --> SCHED
+    DONKI --> SCHED
+    ACE --> SCHED
+    SCHED --> QUAL --> FEAT --> DB
+    FEAT -.-> CACHE
+    DB --> LSTM --> ALERT
+    DB --> XGB --> ALERT
+    DB --> REG --> ALERT
+    ALERT --> DB
+    DB --> API
+    CACHE --> API
+    API --> WS
+    API --> UI
+    WS --> UI
+
+    classDef source fill:#161B33,stroke:#4FD1E8,color:#E8ECF4,stroke-width:1px
+    classDef pipeline fill:#1B2340,stroke:#4FD1E8,color:#E8ECF4,stroke-width:1px
+    classDef storage fill:#0A0E1A,stroke:#F5A623,color:#E8ECF4,stroke-width:2px
+    classDef ml fill:#2A1B33,stroke:#F5A623,color:#E8ECF4,stroke-width:1px
+    classDef backend fill:#0F2A2E,stroke:#34D399,color:#E8ECF4,stroke-width:1px
+    classDef frontend fill:#141A2E,stroke:#E8ECF4,color:#E8ECF4,stroke-width:2px
+```
+
+### Component Breakdown
+
+| Service | Responsibility | Key Tech | Entry Point |
+|---|---|---|---|
+| **`astra-backend`** | REST API + WebSocket broadcaster | FastAPI, async SQLAlchemy, Redis | `main.py` |
+| **`data_pipeline`** | Scheduled ingestion, validation, feature engineering | httpx, asyncpg, APScheduler, loguru | `scheduler.py` |
+| **`astra_ml_pipeline`** | Model training & forecast generation | PyTorch, XGBoost, pandas, scikit-learn | `train.py`, `run_forecast.py` |
+| **`astra_frontend`** | Dashboard SPA | React 19, Vite, Three.js, TanStack Query | `src/App.tsx` |
+
+### Layered View
+
+| Layer | Components | Purpose |
+|---|---|---|
+| **Acquisition** | NOAA SWPC, GOES-16, NASA DONKI, ACE/DSCOVR clients | Pull raw solar & particle telemetry on a fixed schedule |
+| **Validation & Enrichment** | Data quality checks, feature engineering | Reject bad readings, derive model-ready features |
+| **Persistence** | TimescaleDB (time-series), Redis (hot cache) | Durable history + low-latency reads for the API |
+| **Intelligence** | LSTM, XGBoost, regression, alert engine | Turn stored features into forecasts and risk labels |
+| **Delivery** | FastAPI REST, WebSocket `/ws/live` | Serve forecasts/alerts to clients, push live updates |
+| **Presentation** | React 19 dashboard | Visualize KPIs, forecasts, alerts, and history for operators |
+
+For a deeper dive, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+<br/>
+
+<a name="data-flow"></a>
+
+## 🔁 End-to-End Data Flow
+
+The sequence below traces a single telemetry reading from ingestion to the moment an operator sees a risk badge update on the dashboard.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Src as External Feeds<br/>(NOAA · GOES · DONKI · ACE/DSCOVR)
+    participant Sched as data_pipeline<br/>(APScheduler)
+    participant DQ as Data Quality
+    participant FE as Feature Engineering
+    participant DB as TimescaleDB
+    participant ML as astra_ml_pipeline<br/>(LSTM · XGBoost · Regression)
+    participant Alert as Alert Engine
+    participant API as FastAPI Backend
+    participant Cache as Redis
+    participant WS as WebSocket /ws/live
+    participant UI as React Dashboard
+
+    Src->>Sched: Poll on schedule (cron interval)
+    Sched->>DQ: Raw observation batch
+    DQ->>FE: Validated readings
+    FE->>DB: Write engineered features
+    ML->>DB: Pull rolling feature window
+    ML->>ML: Forecast flux (1h/3h/24h) + classify risk + estimate CME arrival
+    ML->>DB: Persist tagged forecast
+    ML->>Alert: New forecast available
+    Alert->>Alert: Compare risk_level vs active alert
+    Alert->>DB: Create / resolve alert record
+    API->>DB: Query latest forecast & alerts
+    API->>Cache: Read/write hot values
+    API->>WS: Broadcast updated risk state
+    WS->>UI: Push live update
+    UI->>API: (fallback) REST polling for KPIs & history
+```
+
+<br/>
+
+<a name="alert-lifecycle"></a>
+
+## 🚨 Alert Lifecycle
+
+The alert engine polls the latest forecast on a fixed interval and reconciles it against any currently active alert, only opening or closing alerts when the risk level actually changes.
+
+```mermaid
+stateDiagram-v2
+    [*] --> LOW
+    LOW --> MEDIUM: predicted risk crosses MEDIUM threshold
+    MEDIUM --> HIGH: predicted risk crosses HIGH threshold
+    HIGH --> EXTREME: predicted risk crosses EXTREME threshold
+    EXTREME --> HIGH: risk subsides
+    HIGH --> MEDIUM: risk subsides
+    MEDIUM --> LOW: risk subsides
+    HIGH --> [*]: alert resolved (is_active = false)
+    EXTREME --> [*]: alert resolved (is_active = false)
+```
+
+| Alert Level | Signal | Operator Action Implied |
+|---|---|---|
+| 🟢 **LOW** | Nominal solar wind / flux, no active alert | Routine monitoring |
+| 🟡 **MEDIUM** | Elevated flux or a watch-worthy DONKI event | Increase monitoring cadence |
+| 🟠 **HIGH** | `alert_level` in `{HIGH, EXTREME}` per `alert_engine.py` | Prepare contingency / safe-mode readiness |
+| 🔴 **EXTREME** | Highest classified risk from the XGBoost head | Consider defensive safe-mode for affected assets |
+
+Every alert record stores the triggering forecast (`forecast_id`), predicted Kp index, predicted proton flux, a human-readable message, and `triggered_at` / `resolved_at` timestamps, so the full history of an event is auditable end to end.
+
+<br/>
+
+<a name="machine-learning"></a>
+
+## 🧠 Machine Learning
+
+The forecasting core combines a sequence model with a classifier so raw flux predictions become an actionable risk label, not just a number.
+
+```
+Input (batch, timesteps, features)
+        │
+   LSTM(128) → Dropout(0.2)
+        │
+   LSTM(64)  → Dropout(0.2)
+        │
+   Dense(32) + ReLU        ← shared trunk
+        │
+        ├── Proton flux forecast (1h / 3h / 24h)   → fed into
+        ├── XGBoost risk classifier                → LOW / MEDIUM / HIGH / EXTREME
+        └── CME arrival regressor                    → hours-to-arrival
+```
 
 ```mermaid
 flowchart LR
-    subgraph SRC["🛰️ Data Sources"]
-        NOAA[NOAA SWPC]
-        NASA[NASA DONKI]
-        GOES[GOES-16]
-        ACE[ACE / DSCOVR]
-    end
-
-    subgraph ING["⏱️ Ingestion Layer"]
-        SCHED[Scheduler]
-        VALID[Validation & QC]
-    end
-
-    subgraph PROC["🧮 Processing & ML Layer"]
-        FEAT[Feature Engineering]
-        MODELS[ML Models<br/>LSTM · XGBoost · Regression]
-    end
-
-    subgraph STORE["💾 Storage Layer"]
-        TSDB[(TimescaleDB)]
-        CACHE[(Redis Cache)]
-    end
-
-    subgraph APP["🚀 Application Layer"]
-        API[FastAPI + WebSockets]
-    end
-
-    subgraph UI["🖥️ Presentation Layer"]
-        FE[React Dashboard]
-        USERS[👤 Operators]
-    end
-
-    NOAA --> SCHED
-    NASA --> SCHED
-    GOES --> SCHED
-    ACE --> SCHED
-    SCHED --> VALID
-    VALID --> FEAT
-    FEAT --> MODELS
-    FEAT --> TSDB
-    MODELS --> TSDB
-    TSDB --> CACHE
-    CACHE --> API
-    MODELS --> API
-    API <--> FE
-    FE --> USERS
-
-    style SRC fill:#0B3D91,color:#fff
-    style ING fill:#1E5AA8,color:#fff
-    style PROC fill:#7B2FF7,color:#fff
-    style STORE fill:#116466,color:#fff
-    style APP fill:#D65108,color:#fff
-    style UI fill:#1B998B,color:#fff
+    RAW["Rolling feature window<br/>(TimescaleDB)"] --> L1["LSTM(128)<br/>+ Dropout(0.2)"]
+    L1 --> L2["LSTM(64)<br/>+ Dropout(0.2)"]
+    L2 --> D["Dense(32) + ReLU<br/>(shared trunk)"]
+    D --> F1["Flux Forecast<br/>1h / 3h / 24h"]
+    D --> F2["XGBoost<br/>Risk Classifier"]
+    D --> F3["Regression<br/>CME Arrival (hrs)"]
+    F1 --> F2
+    F1 --> OUT[("Forecast written<br/>back to DB")]
+    F2 --> OUT
+    F3 --> OUT
+    OUT --> API2["Served via<br/>FastAPI"]
 ```
 
-> 💡 **Design principle:** Every layer is independently scalable and independently replaceable — the ML layer can be retrained and redeployed without touching ingestion, and the frontend can be swapped without touching the API contract.
+- **LSTM head** predicts future proton flux intensity at three forecast horizons from a rolling window of solar-wind and X-ray features
+- **XGBoost head** classifies the predicted flux into one of four actionable risk categories operators can act on immediately
+- **Regression head** estimates hours-to-arrival for an in-transit CME, feeding early warnings into the alert engine
 
----
+### Model Summary
 
-## 📁 Folder Structure
+| Model | Task | Input | Output | Library |
+|---|---|---|---|---|
+| **LSTM** (2-layer, 128→64 units) | Sequence forecasting | Rolling window of solar-wind + X-ray features | Proton flux at 1h / 3h / 24h | PyTorch |
+| **XGBoost** | Multi-class classification | Forecasted flux + auxiliary features | `LOW` / `MEDIUM` / `HIGH` / `EXTREME` | XGBoost |
+| **Regression head** | Time-to-event estimation | In-transit CME parameters | Hours-to-arrival | scikit-learn |
+
+Training and inference both live in `astra_ml_pipeline/`; the serving loop periodically pulls fresh features from TimescaleDB and writes tagged forecasts back to the database for the API to serve.
+
+<br/>
+
+<a name="tech-stack"></a>
+
+## 🛠️ Tech Stack
+
+<table>
+<tr><td valign="top">
+
+**Backend**
+- FastAPI · Uvicorn
+- SQLAlchemy 2.0 (async)
+- asyncpg · Redis (redis-py)
+- Pydantic v2
+- python-jose · passlib[bcrypt] (JWT auth)
+- httpx
+
+</td><td valign="top">
+
+**Machine Learning**
+- PyTorch (LSTM)
+- XGBoost
+- NumPy · Pandas · scikit-learn
+- PyArrow · joblib
+
+</td></tr>
+<tr><td valign="top">
+
+**Frontend**
+- React 19 · TypeScript 5.8
+- Vite 6 · Express (`server.ts`)
+- TanStack Query 5 · react-router-dom 7
+- Recharts · Three.js
+- Tailwind CSS · Gemini API insights
+
+</td><td valign="top">
+
+**Data & Infrastructure**
+- PostgreSQL 16 + TimescaleDB
+- Redis 7 · Apache Kafka (stream ingestion)
+- APScheduler · loguru
+- Docker & Docker Compose
+- GitHub Actions (CI) · Render.com
+
+</td></tr>
+</table>
+
+<br/>
+
+<a name="project-structure"></a>
+
+## 📁 Project Structure
+
+<details>
+<summary><strong>Click to expand the monorepo layout</strong></summary>
 
 ```
-ASTRA/
-├── backend/
-│   ├── app/
-│   │   ├── api/                 # FastAPI route definitions
-│   │   ├── core/                # Config, security, JWT logic
-│   │   ├── services/             # Business logic layer
-│   │   ├── schemas/              # Pydantic models
-│   │   └── websockets/           # Real-time event handlers
-│   ├── configs/
-│   └── requirements.txt
+Astra-main/
+├── astra-backend/              # FastAPI REST + WebSocket service
+│   ├── routers/                 # forecast · history · risk · status
+│   ├── main.py                  # app entrypoint & router registration
+│   ├── database.py              # async SQLAlchemy engine/session
+│   ├── models.py / schemas.py   # ORM models & Pydantic schemas
+│   ├── websocket.py             # /ws/live broadcaster
+│   ├── alert_engine.py          # four-level risk alert logic
+│   ├── config.py                # env-driven Settings
+│   └── Dockerfile
 │
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── hooks/
-│   │   ├── charts/
-│   │   └── api/
-│   ├── public/
-│   └── package.json
+├── data_pipeline/               # Scheduled ingestion worker
+│   ├── fetch_noaa.py            # solar wind · Bz/Bt · Kp
+│   ├── fetch_goes.py            # GOES-16 proton/electron flux
+│   ├── fetch_donki.py           # NASA DONKI CME & flare events
+│   ├── feature_engineering.py
+│   ├── data_quality.py
+│   ├── scheduler.py             # APScheduler job orchestration
+│   └── schema.sql
 │
-├── ml/
-│   ├── models/
-│   │   ├── lstm_flux_forecast/
-│   │   ├── xgboost_risk_classifier/
-│   │   └── cme_arrival_regression/
-│   ├── data_pipeline/
-│   │   ├── ingestion/
-│   │   ├── cleaning/
-│   │   └── feature_engineering/
-│   ├── training/
-│   └── evaluation/
+├── astra_ml_pipeline/           # Forecast modeling service
+│   ├── model.py                 # LSTM architecture
+│   ├── train.py / preprocessing.py
+│   ├── inference.py / run_forecast.py
+│   ├── cme_pipeline.py          # CME arrival regression
+│   └── artifacts/               # saved model weights & metrics
 │
-├── data_pipeline/
-│   ├── connectors/               # NOAA, NASA, GOES, ACE/DSCOVR clients
-│   └── scheduler/
+├── astra_frontend/              # React 19 + TypeScript SPA
+│   ├── src/components/          # Dashboard · Login · charts · 3D canvases
+│   ├── src/App.tsx / main.tsx
+│   ├── server.ts                # Express dev/serve entry (port 3000)
+│   └── Dockerfile                # multi-stage → nginx production build
 │
-├── docker/
-│   ├── backend.Dockerfile
-│   ├── frontend.Dockerfile
-│   ├── ml.Dockerfile
-│   └── docker-compose.yml
-│
-├── scripts/
-│   ├── setup.sh
-│   ├── seed_db.py
-│   └── train_all_models.sh
-│
-├── docs/
-│   ├── architecture/
-│   ├── api/
-│   └── assets/
-│
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── api/
-│
-├── configs/
-│   ├── .env.example
-│   └── settings.yaml
-│
+├── docs/                        # ARCHITECTURE.md · API.md
 ├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
-├── LICENSE
-└── README.md
+│   ├── workflows/ci.yml         # lint + typecheck on push/PR
+│   └── assets/                  # banner & preview images
+├── docker-compose.yml           # postgres · redis · backend · data pipeline
+└── render.yaml                  # Render.com deployment manifest
 ```
 
----
+</details>
 
-## 🧰 Technology Stack
+<br/>
 
-| Technology | Purpose | Why Chosen | Advantages |
+<a name="data-sources"></a>
+
+## 📡 Data Sources
+
+| Source | Provider | Data | Fetched By |
 |---|---|---|---|
-| **Python 3.11** | Core backend & ML language | Mature ecosystem for data science + web frameworks | Fast development, huge library support |
-| **FastAPI** | REST API framework | Async-first, auto-generated OpenAPI docs | High throughput, native Pydantic validation |
-| **PyTorch** | Deep learning framework | Flexible dynamic graphs, strong LSTM/RNN support | Easy experimentation, GPU acceleration |
-| **XGBoost** | Gradient-boosted risk classification | Best-in-class performance on tabular data | Fast training, interpretable feature importance |
-| **PostgreSQL 16** | Primary relational database | ACID compliance, mature tooling | Reliable, extensible via extensions |
-| **TimescaleDB** | Time-series extension for Postgres | Purpose-built for high-frequency telemetry | Fast range queries, automatic partitioning |
-| **Redis 7** | Caching & session store | In-memory speed for hot-path reads | Sub-ms latency, pub/sub for alerts |
-| **React 19** | Frontend UI library | Component reusability, huge ecosystem | Fast rendering, strong community support |
-| **TypeScript** | Type-safe frontend logic | Compile-time safety across a large codebase | Fewer runtime bugs, better DX |
-| **Vite** | Frontend build tool | Near-instant HMR, modern ESM-first bundling | Fast builds, lightweight config |
-| **TailwindCSS** | Utility-first styling | Rapid, consistent UI development | Small bundle size, design consistency |
-| **Recharts** | Data visualization | Declarative React-native charting | Easy integration with live data streams |
-| **Docker & Compose** | Containerization | Environment parity dev → prod | Reproducible deployments |
-| **GitHub Actions** | CI/CD automation | Native GitHub integration | Automated testing & deployment |
-| **JWT** | Authentication | Stateless, scalable auth | Works cleanly with REST + WebSockets |
+| **NOAA SWPC** | NOAA | Solar wind plasma, IMF Bz/Bt, Kp index | `fetch_noaa.py` |
+| **GOES-16** | NOAA / NASA | Integral proton & electron flux (10/50/100 MeV) | `fetch_goes.py` |
+| **NASA DONKI** | NASA | CME events & solar flare catalog | `fetch_donki.py` |
+| **ACE / DSCOVR** | NASA / NOAA | Upstream solar wind, IMF, and energetic particles | data pipeline |
 
----
+A free `NASA_API_KEY` (instant signup, no card required) is available at [api.nasa.gov](https://api.nasa.gov) for DONKI access.
 
-## 🧠 AI Models
+<br/>
 
-### 1️⃣ LSTM — Particle Flux Forecasting
+<a name="api-reference"></a>
 
-<table>
-<tr><td><b>Input</b></td><td>Multivariate time series: proton flux, electron flux, Kp index, solar wind speed, IMF Bz/Bt</td></tr>
-<tr><td><b>Sequence Length</b></td><td>72 timesteps (sliding window, 5-min cadence → 6-hour lookback)</td></tr>
-<tr><td><b>Features</b></td><td>Proton flux (>10 MeV, >100 MeV), Kp index, Dst index, solar wind speed/density, IMF Bz/Bt, X-ray flux</td></tr>
-<tr><td><b>Output</b></td><td>Forecasted proton flux at <b>+1h</b>, <b>+3h</b>, and <b>+24h</b> horizons</td></tr>
-<tr><td><b>Architecture</b></td><td>Stacked 2-layer LSTM (128 → 64 units) → Dense(32, ReLU) → Dense(3, linear)</td></tr>
-<tr><td><b>Training</b></td><td>Sliding-window supervised learning over 5+ years of historical NOAA/GOES telemetry</td></tr>
-<tr><td><b>Loss Function</b></td><td>Huber Loss (robust to solar-storm outlier spikes)</td></tr>
-<tr><td><b>Optimizer</b></td><td>Adam (lr=1e-3, weight decay=1e-5, ReduceLROnPlateau scheduler)</td></tr>
-<tr><td><b>Evaluation Metrics</b></td><td>MAE, RMSE, and directional accuracy on log-scaled flux values</td></tr>
-</table>
+## 📚 API Reference
 
-### 2️⃣ XGBoost — Radiation Risk Classification
+Base URL (local): `http://localhost:8000` · Interactive docs: `http://localhost:8000/docs`
 
-<table>
-<tr><td><b>Features</b></td><td>LSTM-forecasted flux, current Kp/Dst indices, CME speed, solar wind pressure, historical event recurrence</td></tr>
-<tr><td><b>Target Labels</b></td><td><code>LOW</code> · <code>MEDIUM</code> · <code>HIGH</code> · <code>EXTREME</code></td></tr>
-<tr><td><b>Feature Importance</b></td><td>Ranked via gain-based importance; proton flux forecast and Kp index dominate splits</td></tr>
-<tr><td><b>Evaluation</b></td><td>Multi-class Precision, Recall, F1, and ROC-AUC (one-vs-rest)</td></tr>
-</table>
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/v1/status` | Service info & uptime |
+| `GET` | `/api/v1/health` | Database & cache connectivity check |
+| `GET` | `/api/v1/forecast/latest` | Latest radiation / space-weather forecast |
+| `GET` | `/api/v1/forecast/summary` | Forecasts at 60 / 180 / 1440-minute horizons |
+| `GET` | `/api/v1/history?limit=` | Raw stored telemetry observations |
+| `GET` | `/api/v1/risk/current` | Current radiation risk assessment |
+| `GET` | `/api/v1/risk/alerts` | Active geostationary radiation risk alerts |
+| `WS`  | `/ws/live` | Real-time push stream of risk updates |
 
-### 3️⃣ CME Arrival Time Regression
-
-Coronal Mass Ejection arrival time is estimated using a **gradient-boosted regression model** trained on historical CME catalog data (NASA DONKI) with features including initial CME speed, angular width, source-region latitude/longitude, and background solar wind conditions. The model outputs an **estimated transit time (hours) to L1/Earth**, which is then converted into a predicted arrival timestamp and surfaced directly on the operator dashboard alongside a confidence interval.
-
----
-
-## 🌍 Data Sources
-
-| Source | Data Provided | Frequency | Purpose |
-|---|---|---|---|
-| **NOAA SWPC** | Solar wind, X-ray flux, proton flux, Kp index | Real-time (1–5 min) | Core operational radiation & geomagnetic monitoring |
-| **NASA DONKI** | CME catalog, solar flare events, SEP events | Event-driven | CME arrival modeling & historical event labeling |
-| **GOES-16** | X-ray flux, proton/electron flux, magnetometer | Real-time (1 min) | High-cadence particle flux input for LSTM |
-| **ACE** | Solar wind plasma & magnetic field data | Real-time (1–5 min) | Upstream solar wind conditions (L1 point) |
-| **DSCOVR** | Solar wind, IMF Bz/Bt | Real-time (1 min) | Redundant L1 solar wind monitoring |
-| **OMNIWeb** | Historical merged solar wind & geomagnetic datasets | Hourly/Daily (archival) | Model training & backtesting |
-
----
-
-## 🔬 ML Pipeline
+### Typical Client Call Pattern
 
 ```mermaid
-flowchart TD
-    A[📥 Data Collection] --> B[🧹 Cleaning]
-    B --> C[🛠️ Feature Engineering]
-    C --> D[📐 Scaling / Normalization]
-    D --> E[🏋️ Training]
-    E --> F[✅ Validation]
-    F --> G[⚡ Inference]
-    G --> H[🚦 Risk Prediction]
-    H --> I[📊 Dashboard]
-
-    style A fill:#0B3D91,color:#fff
-    style B fill:#1E5AA8,color:#fff
-    style C fill:#3A6EA5,color:#fff
-    style D fill:#5B8DB8,color:#fff
-    style E fill:#7B2FF7,color:#fff
-    style F fill:#9B4DFF,color:#fff
-    style G fill:#D65108,color:#fff
-    style H fill:#E85D04,color:#fff
-    style I fill:#1B998B,color:#fff
+flowchart LR
+    C["Client<br/>(Dashboard / 3rd-party)"] -->|"GET /api/v1/forecast/latest"| API["FastAPI"]
+    C -->|"GET /api/v1/risk/alerts"| API
+    C -->|"WS connect /ws/live"| API
+    API -->|"JSON forecast"| C
+    API -->|"JSON alerts"| C
+    API -->|"push: risk update"| C
 ```
 
----
+Full request/response shapes are documented in [`docs/API.md`](docs/API.md).
 
-## 📡 API Documentation
+<br/>
 
-**Base URL:** `https://api.astra-project.io/v1`
-**Auth:** Bearer JWT (`Authorization: Bearer <token>`)
+<a name="getting-started"></a>
 
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `GET` | `/forecast` | Returns 1h / 3h / 24h particle flux forecasts | ✅ |
-| `GET` | `/risk` | Returns current risk classification (Low–Extreme) | ✅ |
-| `GET` | `/history` | Returns historical telemetry & past risk levels | ✅ |
-| `GET` | `/status` | System health, data-feed connectivity, model status | ✅ |
-| `POST` | `/predict` | Runs on-demand inference on supplied telemetry | ✅ |
-| `WS` | `/ws/live` | Real-time streaming of forecasts & alerts | ✅ |
-
-<details>
-<summary><b>📤 Example: <code>GET /forecast</code> Response</b></summary>
-
-```json
-{
-  "timestamp": "2026-07-01T11:27:03Z",
-  "forecast": {
-    "1h":  { "proton_flux": 1205.4, "risk": "LOW", "confidence": 0.86 },
-    "3h":  { "proton_flux": 1310.9, "risk": "LOW", "confidence": 0.78 },
-    "24h": { "proton_flux": 2440.2, "risk": "MEDIUM", "confidence": 0.61 }
-  },
-  "model_version": "lstm-v1.3.0"
-}
-```
-</details>
-
-<details>
-<summary><b>📤 Example: <code>GET /risk</code> Response</b></summary>
-
-```json
-{
-  "current_risk": "LOW",
-  "kp_index": 3.2,
-  "storm_probability": 0.20,
-  "confidence_weight": 0.68,
-  "active_alerts": 0
-}
-```
-</details>
-
-<details>
-<summary><b>🔐 Example: Authentication Flow</b></summary>
-
-```bash
-curl -X POST https://api.astra-project.io/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "operator1", "password": "********"}'
-
-# Response
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "token_type": "bearer",
-  "expires_in": 3600
-}
-```
-</details>
-
----
-
-## 🖼️ Dashboard Showcase
-
-> 📸 *Screenshots below are placeholders — replace with actual captures from your deployed instance.*
-
-| View | Preview |
-|---|---|
-| **Live Dashboard** | ![Live Dashboard](./docs/assets/screenshot-dashboard.png) |
-| **Forecast Graph** | ![Forecast Graph](./docs/assets/screenshot-forecast.png) |
-| **Risk Panel** | ![Risk Panel](./docs/assets/screenshot-risk-panel.png) |
-| **Orbit Map** | ![Orbit Map](./docs/assets/screenshot-orbit-map.png) |
-| **Alert History** | ![Alert History](./docs/assets/screenshot-alert-history.png) |
-| **Dark Theme** | ![Dark Theme](./docs/assets/screenshot-dark-theme.png) |
-
----
-
-## ⚙️ Installation
+## ⚡ Getting Started
 
 ### Prerequisites
-- Python 3.11+
-- Node.js 20+
-- Docker & Docker Compose
-- PostgreSQL 16 (if running without Docker)
-- Redis 7 (if running without Docker)
 
-### 🐳 Docker Compose (Recommended)
+- [Docker](https://www.docker.com/) & Docker Compose — for the backend stack
+- [Node.js 20+](https://nodejs.org/) — for the frontend
+- [Python 3.11+](https://www.python.org/) — for the ML pipeline (if running outside Docker)
+- A free NASA API key from [api.nasa.gov](https://api.nasa.gov) (optional — `DEMO_KEY` works for light use)
 
-```bash
-git clone https://github.com/neil-data/Astra.git
-cd Astra
-cp configs/.env.example .env
-docker compose -f docker/docker-compose.yml up --build
-```
+### 1 · Backend stack (Docker Compose)
 
-### 🐧 Linux
+`docker-compose.yml` brings up Postgres (TimescaleDB), Redis, the backend API, and the data pipeline worker together:
 
 ```bash
-sudo apt update && sudo apt install -y python3.11 python3.11-venv nodejs npm
 git clone https://github.com/neil-data/Astra.git
-cd Astra/backend && python3.11 -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-cd ../frontend && npm install
+cd Astra-main
+cp .env.example .env      # fill in NASA_API_KEY, JWT_SECRET_KEY, etc.
+docker compose up --build
 ```
 
-### 🪟 Windows (PowerShell)
+### 2 · Frontend (run separately)
 
-```powershell
-git clone https://github.com/neil-data/Astra.git
-cd Astra\backend
-py -3.11 -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-cd ..\frontend
+```bash
+cd astra_frontend
 npm install
-```
-
-### 🍎 macOS
-
-```bash
-brew install python@3.11 node
-git clone https://github.com/neil-data/Astra.git
-cd Astra/backend && python3.11 -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-cd ../frontend && npm install
-```
-
-### 🔧 Manual Installation (No Docker)
-
-```bash
-# 1. Start PostgreSQL & Redis locally
-# 2. Run database migrations
-cd backend && alembic upgrade head
-# 3. Start backend
-uvicorn app.main:app --reload --port 8000
-# 4. Start frontend
-cd ../frontend && npm run dev
-```
-
-### 🔑 Environment Variables
-
-```env
-# .env.example
-
-# --- Database ---
-POSTGRES_USER=astra_user
-POSTGRES_PASSWORD=change_me
-POSTGRES_DB=astra_db
-DATABASE_URL=postgresql://astra_user:change_me@localhost:5432/astra_db
-
-# --- Redis ---
-REDIS_URL=redis://localhost:6379/0
-
-# --- Auth ---
-JWT_SECRET_KEY=super-secret-key-change-me
-JWT_ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-
-# --- External Data APIs ---
-NOAA_SWPC_API_URL=https://services.swpc.noaa.gov
-NASA_DONKI_API_KEY=your_nasa_api_key
-GOES_DATA_ENDPOINT=https://data.ngdc.noaa.gov/goes16
-
-# --- App ---
-ENVIRONMENT=development
-API_PORT=8000
-FRONTEND_URL=http://localhost:5173
-```
-
----
-
-## ▶️ Running the Project
-
-```bash
-# Backend
-cd backend
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-
-# Frontend
-cd frontend
 npm run dev
-
-# Database (via Docker)
-docker compose up postgres timescaledb redis -d
-
-# Full stack (Docker Compose)
-docker compose -f docker/docker-compose.yml up
-
-# Run test suite
-pytest backend/tests/
-npm test --prefix frontend
 ```
 
----
-
-## 🏋️ Machine Learning Training
+### 3 · ML forecasting loop (optional, run separately)
 
 ```bash
-# 1. Prepare dataset (fetch + clean + feature engineer)
-python ml/data_pipeline/prepare_dataset.py --start 2019-01-01 --end 2026-01-01
-
-# 2. Train LSTM flux forecaster
-python ml/training/train_lstm.py --config ml/configs/lstm_config.yaml
-
-# 3. Train XGBoost risk classifier
-python ml/training/train_xgboost.py --config ml/configs/xgb_config.yaml
-
-# 4. Train CME arrival regression model
-python ml/training/train_cme_regression.py
-
-# 5. Validate all models
-python ml/evaluation/validate_models.py --model all
-
-# 6. Run inference on latest data
-python ml/inference/run_inference.py --live
-
-# 7. Save trained models
-python ml/training/save_models.py --output ml/models/
+cd astra_ml_pipeline
+pip install -r requirements.txt --break-system-packages
+python run_forecast.py
 ```
 
----
+### Local URLs
 
-## 🗄️ Database Schema
+| Service | URL |
+|---|---|
+| Backend API | http://localhost:8000 |
+| Swagger / OpenAPI docs | http://localhost:8000/docs |
+| Frontend (dev) | http://localhost:3000 |
+
+<br/>
+
+<a name="environment-variables"></a>
+
+## 🔐 Environment Variables
+
+Copy `.env.example` → `.env` at the repo root for Docker Compose, and/or per-service `.env` files for standalone runs.
+
+| Variable | Example | Used By |
+|---|---|---|
+| `DATABASE_URL` | `postgresql+asyncpg://astra_user:astra_pass@postgres:5432/astra_db` | backend, ML pipeline |
+| `DATABASE_URL_SYNC` | `postgresql://astra_user:astra_pass@postgres:5432/astra_db` | data pipeline |
+| `REDIS_URL` | `redis://redis:6379` | backend, data pipeline |
+| `JWT_SECRET_KEY` / `JWT_ALGORITHM` / `JWT_EXPIRY` | — | backend auth |
+| `NASA_API_KEY` | `DEMO_KEY` | data pipeline (DONKI) |
+| `VITE_API_BASE` / `VITE_API_URL` | `http://localhost:8000` | frontend |
+| `GEMINI_API_KEY` | — | frontend AI insights panel |
+
+<br/>
+
+<a name="deployment"></a>
+
+## ☁️ Deployment
+
+- **Live demo:** [astra-five-green.vercel.app](https://astra-five-green.vercel.app)
+- `render.yaml` defines a production topology on [Render](https://render.com/):
+  - **`astra-backend`** — Dockerized web service, health-checked on `/api/v1/health`
+  - **`astra-data-pipeline`** — background ingestion worker
+  - **`astra-redis`** / **`astra-db`** — managed Redis and PostgreSQL
 
 ```mermaid
-erDiagram
-    USERS ||--o{ ALERTS : receives
-    USERS {
-        uuid id PK
-        string username
-        string email
-        string hashed_password
-        string role
-        timestamp created_at
-    }
+flowchart TB
+    subgraph Render["Render.com"]
+        BE["astra-backend<br/>(web service)"]
+        DP["astra-data-pipeline<br/>(background worker)"]
+        RDB[("astra-db<br/>PostgreSQL/Timescale")]
+        RCACHE[("astra-redis")]
+    end
+    subgraph Vercel["Vercel"]
+        FE["astra_frontend<br/>(static / SSR)"]
+    end
 
-    TELEMETRY ||--o{ FORECASTS : generates
-    TELEMETRY {
-        uuid id PK
-        timestamp recorded_at
-        float proton_flux
-        float electron_flux
-        float kp_index
-        float dst_index
-        float solar_wind_speed
-        float imf_bz
-        float imf_bt
-        string source
-    }
-
-    FORECASTS ||--o{ RISK_CLASSIFICATIONS : informs
-    FORECASTS {
-        uuid id PK
-        uuid telemetry_id FK
-        timestamp forecast_time
-        string horizon
-        float predicted_flux
-        float confidence
-        string model_version
-    }
-
-    RISK_CLASSIFICATIONS ||--o{ ALERTS : triggers
-    RISK_CLASSIFICATIONS {
-        uuid id PK
-        uuid forecast_id FK
-        string risk_level
-        float probability
-        timestamp classified_at
-    }
-
-    ALERTS {
-        uuid id PK
-        uuid user_id FK
-        uuid risk_id FK
-        string channel
-        string status
-        timestamp sent_at
-    }
-
-    CME_EVENTS ||--o{ RISK_CLASSIFICATIONS : correlates
-    CME_EVENTS {
-        uuid id PK
-        timestamp detected_at
-        float speed_km_s
-        float angular_width
-        float predicted_arrival_hours
-        timestamp predicted_arrival_time
-    }
+    DP --> RDB
+    BE --> RDB
+    BE --> RCACHE
+    FE -->|REST + WS| BE
 ```
 
----
+**CI:** every push/PR to `main` runs `.github/workflows/ci.yml` — flake8 syntax checks on the backend and a TypeScript type-check (`tsc --noEmit`) on the frontend.
 
-## 🚦 Risk Levels
+<br/>
 
-| Level | Color | Meaning | Recommended Actions |
-|---|---|---|---|
-| 🟢 **LOW** | `#2ECC71` Green | Nominal conditions; background radiation only | Continue standard operations; routine monitoring |
-| 🟡 **MEDIUM** | `#F1C40F` Amber | Elevated particle flux; minor operational risk | Increase monitoring cadence; review satellite health telemetry |
-| 🟠 **HIGH** | `#E67E22` Orange | Significant radiation storm probability | Consider safe-mode readiness; notify satellite operations team |
-| 🔴 **EXTREME** | `#E74C3C` Red | Severe/extreme radiation storm imminent or active | Initiate protective procedures; power down non-essential payloads; activate incident response |
-
----
-
-## 📈 Performance Metrics
-
-| Model | Metric | Value* |
-|---|---|---|
-| LSTM (Flux Forecast) | MAE | *reported per training run* |
-| LSTM (Flux Forecast) | RMSE | *reported per training run* |
-| XGBoost (Risk Classifier) | Precision (macro) | *reported per training run* |
-| XGBoost (Risk Classifier) | Recall (macro) | *reported per training run* |
-| XGBoost (Risk Classifier) | F1 Score (macro) | *reported per training run* |
-| XGBoost (Risk Classifier) | ROC-AUC (OvR) | *reported per training run* |
-
-*\*Populate this table automatically from `ml/evaluation/validate_models.py` output after each training run — metrics are written to `ml/evaluation/reports/latest_metrics.json`.*
-
-<details>
-<summary>📊 Sample Confusion Matrix (Risk Classification)</summary>
-
-```
-                Predicted
-              LOW  MED  HIGH  EXT
-Actual  LOW  [ ●    ·    ·    · ]
-        MED  [ ·    ●    ·    · ]
-        HIGH [ ·    ·    ●    · ]
-        EXT  [ ·    ·    ·    ● ]
-```
-*(Generated automatically after each evaluation run — see `ml/evaluation/confusion_matrix.png`)*
-</details>
-
----
-
-## 🛣️ Future Roadmap
-
-### 🎯 Near-Term
-- [ ] SHAP-based explainability for XGBoost risk decisions
-- [ ] Expanded alert channels (Slack, MS Teams)
-- [ ] Historical event replay mode in dashboard
-
-### 🚀 Mid-Term
-- [ ] Transformer-based sequence models (replacing/augmenting LSTM)
-- [ ] Prometheus + Grafana observability stack
-- [ ] Kubernetes-native deployment (Helm charts)
-
-### 🌠 Long-Term
-- [ ] Vision Transformers for solar imagery analysis
-- [ ] CNN-based CME detection directly from coronagraph imagery
-- [ ] Native mobile app (iOS/Android) for on-the-go operator alerts
-- [ ] Multi-satellite fleet risk correlation engine
-
----
-
-## 🔐 Security
-
-- **JWT Authentication** — stateless, short-lived access tokens with refresh-token rotation
-- **HTTPS Everywhere** — TLS-terminated ingress for all production traffic
-- **Rate Limiting** — per-IP and per-token throttling on all public endpoints
-- **Input Validation** — strict Pydantic schema validation on every request payload
-- **Secrets Management** — `.env`-based local secrets; Docker/K8s secrets in production, never committed to VCS
-- **Docker Security** — non-root container users, minimal base images, dependency vulnerability scanning in CI
-
----
-
-## 🧪 Testing
-
-| Test Type | Tooling | Location |
-|---|---|---|
-| **Unit Tests** | `pytest` | `tests/unit/` |
-| **Integration Tests** | `pytest` + test containers | `tests/integration/` |
-| **API Tests** | `httpx` + `pytest-asyncio` | `tests/api/` |
-| **Model Tests** | `pytest` + fixture datasets | `ml/tests/` |
-
-```bash
-# Run everything
-pytest tests/ ml/tests/ -v --cov=backend --cov=ml
-```
-
----
+<a name="contributing"></a>
 
 ## 🤝 Contributing
 
-Contributions are welcome and appreciated! To contribute:
+1. Fork the repo and create a feature branch: `git checkout -b feature/your-feature`
+2. Make your changes, keeping services in their existing folders
+3. Make sure CI checks pass locally before pushing:
+   - Backend: `flake8 astra-backend --select=E9,F63,F7,F82`
+   - Frontend: `cd astra_frontend && npm run lint`
+4. Open a pull request against `main` with a clear description of the change
 
-1. **Fork** the repository
-2. **Create a branch**: `git checkout -b feature/your-feature-name`
-3. **Commit** your changes: `git commit -m "feat: add your feature"`
-4. **Push** to your fork: `git push origin feature/your-feature-name`
-5. **Open a Pull Request** describing your changes
+There's no automated test suite yet — contributions that add one (`pytest` for the Python services, `vitest`/`playwright` for the frontend) are especially welcome.
 
-> 📋 Please follow [Conventional Commits](https://www.conventionalcommits.org/) and ensure all tests pass (`pytest`, `npm test`) before submitting a PR.
+<br/>
 
----
+<a name="team"></a>
 
-## 👥 Team
+## 👥 Team VoidArchitects
 
-<div align="center">
+Built for the **Bharatiya Antariksh Hackathon 2026** — Problem Statement: *Forecasting Energetic Particle Radiation Environment for ISRO's Geostationary Satellites*.
 
-### **Team VoidArchitects**
-*Bharatiya Antariksh Hackathon 2026 — ISRO × Hack2Skill*
+| Role | Name | Institution |
+|---|---|---|
+| Team Leader | Neil Banerjee | Institute of Advanced Research (IAR), Gandhinagar |
+| Member | Devashya Jethva | Institute of Advanced Research (IAR), Gandhinagar |
+| Member | Rajvardhansingh Chauhan | Institute of Advanced Research (IAR), Gandhinagar |
+| Member | Manthan Balani | Institute of Advanced Research (IAR), Gandhinagar |
 
-<table>
-<tr>
-<td align="center" width="25%">
-<b>👑 Neil Banerjee</b><br/>
-<sub>Team Leader</sub><br/>
-<sub>Institute of Advanced Research (IAR), Gandhinagar</sub>
-</td>
-<td align="center" width="25%">
-<b>Devashya Jethva</b><br/>
-<sub>Team Member</sub><br/>
-<sub>Institute of Advanced Research (IAR), Gandhinagar</sub>
-</td>
-<td align="center" width="25%">
-<b>Rajvardhansingh Chauhan</b><br/>
-<sub>Team Member</sub><br/>
-<sub>Institute of Advanced Research (IAR), Gandhinagar</sub>
-</td>
-<td align="center" width="25%">
-<b>Manthan Balani</b><br/>
-<sub>Team Member</sub><br/>
-<sub>Institute of Advanced Research (IAR), Gandhinagar</sub>
-</td>
-</tr>
-</table>
+<br/>
 
-</div>
+## 🙏 Acknowledgments
 
----
+- [NOAA Space Weather Prediction Center](https://www.swpc.noaa.gov/) — solar wind, Kp index, and GOES data
+- [NASA DONKI](https://ccmc.gsfc.nasa.gov/tools/DONKI/) — CME and solar flare event catalog
+- Built for geostationary satellite radiation-risk monitoring in the context of ISRO missions
+- The open-source projects this is built on: FastAPI, PyTorch, XGBoost, React, TimescaleDB, and the rest of the stack listed above
 
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgements
-
-- 🇮🇳 **ISRO** — for the problem statement and vision behind this challenge
-- 🚀 **NASA** — for open access to DONKI and heliophysics datasets
-- 🌐 **NOAA SWPC** — for real-time space-weather data feeds
-- 🛰️ **ESA** — for complementary space-weather research and data standards
-- 🎉 **Hack2Skill (H2S)** — for organizing the Bharatiya Antariksh Hackathon 2026
-- 💻 **The Open-Source Community** — for the tools, frameworks, and libraries that make projects like ASTRA possible
+<br/>
 
 <div align="center">
 
----
+<sub>Built for a future where solar storms don't catch satellites off guard. 🛰️</sub>
 
-**Made with 🛰️ by Team VoidArchitects for the Bharatiya Antariksh Hackathon 2026**
+<br/>
 
-[⬆ Back to Top](#-astra)
+[⬆ Back to top](#readme-top)
 
 </div>
