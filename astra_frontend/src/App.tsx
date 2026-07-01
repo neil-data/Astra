@@ -30,7 +30,24 @@ declare global {
 // --------------------------------------------------------------------
 
 // API Base calculation
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000";
+const DEFAULT_API_BASE = "https://astra-backend-u2uf.onrender.com";
+
+// Fix: Safely cast import.meta to any to bypass the missing Vite type definition definitions
+const viteEnv = (import.meta as any).env || {};
+const API_BASE = (
+  viteEnv.VITE_API_URL ||
+  viteEnv.VITE_API_BASE ||
+  DEFAULT_API_BASE
+).replace(/\/$/, "");
+
+function getWebSocketUrl(path: string) {
+  const apiUrl = new URL(API_BASE);
+  apiUrl.protocol = apiUrl.protocol === "https:" ? "wss:" : "ws:";
+  apiUrl.pathname = path;
+  apiUrl.search = "";
+  apiUrl.hash = "";
+  return apiUrl.toString();
+}
 
 // Create TanStack Query Client
 const queryClient = new QueryClient({
@@ -74,8 +91,7 @@ function MainAppRoutes() {
     let reconnectTimeout: any = null;
 
     const connect = () => {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `ws://localhost:8000/ws/live`;
+      const wsUrl = getWebSocketUrl('/ws/live');
 
       ws = new WebSocket(wsUrl);
 
@@ -168,7 +184,8 @@ function MainAppRoutes() {
   // Derive fallback values from the latest observation when forecast fields are null
   const latestObs = historyDataRaw?.observations?.[0];
 
-  const currentTelemetry: Telemetry | undefined = currentTelemetryRaw ? {
+  // Fix: changed fallback from `undefined` to `null` to accommodate LandingView and DashboardView types
+  const currentTelemetry: Telemetry | null = currentTelemetryRaw ? {
     timestamp: currentTelemetryRaw.forecast_time || '',
     source: 'NOAA',
     solarWind: currentTelemetryRaw.predicted_solar_wind ?? latestObs?.solar_wind_speed ?? 0,
@@ -176,7 +193,7 @@ function MainAppRoutes() {
     protonFlux: currentTelemetryRaw.predicted_proton_flux ?? latestObs?.proton_flux_10mev ?? 0,
     Bz: currentTelemetryRaw.predicted_bz ?? latestObs?.bz_component ?? 0,
     risk: currentTelemetryRaw.risk_level ?? 'LOW',
-  } : undefined;
+  } : null;
 
   // --- Forecast summary (1h/3h/24h object), normalized to an array ---
   const { data: forecastSummaryRaw } = useQuery({
@@ -299,4 +316,3 @@ export default function App() {
     </QueryClientProvider>
   );
 }
-

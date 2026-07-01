@@ -14,7 +14,9 @@ COPY . .
 
 # Injected at build time by Docker Compose or Render
 ARG VITE_API_BASE
+ARG VITE_API_URL
 ENV VITE_API_BASE=$VITE_API_BASE
+ENV VITE_API_URL=$VITE_API_URL
 
 # Build Vite application
 RUN npm run build
