@@ -10,8 +10,17 @@ from config import settings
 
 logger = logging.getLogger(__name__)
 
+
+def get_async_database_url(database_url: str) -> str:
+    """Use SQLAlchemy's asyncpg dialect for provider-supplied Postgres URLs."""
+    if database_url.startswith("postgresql://"):
+        return database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    if database_url.startswith("postgres://"):
+        return database_url.replace("postgres://", "postgresql+asyncpg://", 1)
+    return database_url
+
 engine = create_async_engine(
-    settings.database_url,
+    get_async_database_url(settings.database_url),
     echo=settings.debug,
     pool_size=10,
     max_overflow=20,

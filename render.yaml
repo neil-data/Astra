@@ -19,8 +19,28 @@ services:
           property: connectionString
       - key: JWT_SECRET_KEY
         generateValue: true
-      - key: ENV
+      - key: ENVIRONMENT
         value: production
+
+  - type: worker
+    name: astra-data-pipeline
+    runtime: docker
+    dockerfilePath: ./data_pipeline/Dockerfile
+    dockerContext: ./data_pipeline
+    plan: free
+    region: singapore
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: astra-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: astra-redis
+          type: redis
+          property: connectionString
+      - key: NASA_API_KEY
+        sync: false
 
   - type: redis
     name: astra-redis
